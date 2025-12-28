@@ -9,16 +9,19 @@ import { EventEmitter } from './EventEmitter';
 export const obj = {
     count: 0,
 
-    clickHandler: function() {
+    clickHandler() {
         this.count += 1;
     },
 
     subscribe() {
-        EventEmitter.on('click', this.clickHandler.bind(this));
+        this.boundClickHandler = this.clickHandler.bind(this);
+        EventEmitter.on('click', this.boundClickHandler);
     },
 
     unsubscribe() {
-        EventEmitter.off('click', this.clickHandler.bind(this));
+        if (this.boundClickHandler) {
+            EventEmitter.off('click', this.boundClickHandler);
+        }
     },
 };
 
